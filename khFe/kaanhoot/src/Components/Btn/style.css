@@ -1,0 +1,23 @@
+.btn{
+    padding: 12px;
+    cursor: pointer;
+    -webkit-transition: width 2s ease-in-out, height 4s ease-in-out; /* For Safari 3.1 to 6.0 */
+    transition: width 1s ease-in-out, height 2s ease-in-out;
+    width: 60%;
+    height: 60px;
+    border-radius: 10px;
+    border: none;
+    background-color:#8f5675;
+    color: #fff;
+    -webkit-box-shadow: 0px 1px 9px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 9px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 9px 0px rgba(0,0,0,0.75);
+    font-size: 110%;
+    letter-spacing: 2px;
+}
+.btn:hover{
+    -webkit-transition: width 2s ease-in-out, height 4s ease-in-out; /* For Safari 3.1 to 6.0 */
+    transition: width 1s ease-in-out, height 2s ease-in-out;
+    width: 70%;
+    height: 50px;
+}
