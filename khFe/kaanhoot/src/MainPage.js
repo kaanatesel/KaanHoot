@@ -83,7 +83,7 @@ class MainPage extends Component {
                     <Grid container className={classes.root} spacing={8}>
                         <Grid item xs={12}>
                             <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
-                                KaanHoot
+                                KaaNHooT
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
