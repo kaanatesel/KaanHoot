@@ -3,11 +3,13 @@ import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 //Components
 import Btn from './Components/Btn/Btn'
 import Input from './Components/Input'
+
+
 const palette = {
     types: {
         backgroundCOLOR: {
@@ -32,6 +34,10 @@ const Styles = {
     KaanHoot: {
         color: '#fff',
         letterSpacing: '10px',
+    },
+    Error: {
+        color: 'red',
+        fontWeight: 'bold',
     }
 }
 
@@ -42,6 +48,7 @@ class MainPage extends Component {
         super()
         this.state = {
             UserName: '',
+            Error: '',
         }
     }
 
@@ -54,7 +61,17 @@ class MainPage extends Component {
 
     getUserName = () => {
         const UserName = this.state.UserName
-        console.log(UserName)
+        if (!UserName) {
+            console.log('yok')
+            this.setState({
+                Error: 'NO Username NO Game'
+            })
+        } else {
+            console.log(UserName)
+            this.setState({
+                Error: ''
+            })
+        }
     }
 
     render() {
@@ -77,9 +94,16 @@ class MainPage extends Component {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Btn onClick={this.getUserName}>
-                                Join The Game
-                            </Btn>
+                            <Link to="/questions" >
+                                <Btn onClick={this.getUserName}>
+                                    Join The Game
+                                </Btn>
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Typography variant="h6" className={classes.Error} gutterBottom>
+                                {this.state.Error}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </Grid>
