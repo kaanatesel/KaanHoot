@@ -1,0 +1,99 @@
+.AnswerBtnA{
+    transition:  background-color 2s ease , border-radius 1s ease;
+    padding: 12px;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    background-color: #e6b800;
+    border-radius: 0px 0px 55px 0px;
+    -moz-border-radius: 0px 0px 55px 0px;
+    -webkit-border-radius: 0px 0px 55px 0px;
+    border: 0px hidden #000000;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+.AnswerBtnA:hover{
+    transition:  background-color 1s ease , border-radius 1s ease;
+    background-color:   #997a00;
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 0px hidden #000000
+}
+.AnswerBtnB{
+    transition:  background-color 2s ease , border-radius 1s ease;
+    padding: 12px;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    background-color:  #3399ff;
+    border-radius: 0px 55px 0px 0px;
+    -moz-border-radius: 0px 55px 0px 0px;
+    -webkit-border-radius: 0px 55px 0px 0px;
+    border: 0px hidden #000000;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+.AnswerBtnB:hover{
+    transition:  background-color 1s ease ,  border-radius 1s ease;
+    background-color:   #0073e6;
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 0px hidden #000000;
+
+}
+.AnswerBtnC{
+    transition:  background-color 2s ease , border-radius 1s ease;
+    padding: 12px;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    background-color:   #33cc33;
+    border-radius: 0px 0px 0px 55px;
+    -moz-border-radius: 0px 0px 0px 55px;
+    -webkit-border-radius: 0px 0px 0px 55px;
+    border: 0px hidden #000000;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+.AnswerBtnC:hover{
+    transition:  background-color 1s ease ,  border-radius 1s ease;
+    background-color:   #248f24;
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 0px hidden #000000;
+
+}
+.AnswerBtnD{
+    transition:  background-color 2s ease , border-radius 1s ease;
+    padding: 12px;
+    margin: 5px;
+    width: 150px;
+    height: 150px;
+    background-color:   #ff0066;
+    border-radius: 55px 0px 0px 0px;
+    -moz-border-radius: 55px 0px 0px 0px;
+    -webkit-border-radius: 55px 0px 0px 0px;
+    border: 0px hidden #000000;
+    color: #fff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+.AnswerBtnD:hover{
+    transition:  background-color 1s ease ,  border-radius 1s ease;
+    background-color:    #b30047;
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border: 0px hidden #000000;
+
+}
