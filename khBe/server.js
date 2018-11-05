@@ -40,11 +40,13 @@ app.use(function (req, res, next) {
 //Routers
 const Users = require('./Router/Users')
 const Questions = require('./Router/Questions')
+const Results = require('./Router/Results')
 
 
 //App.Use
 app.use('/users', Users)
 app.use('/questions', Questions)
+app.use('/results', Results)
 
 app.use(express.json())
 
