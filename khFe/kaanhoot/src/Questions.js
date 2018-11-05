@@ -7,13 +7,13 @@ import Paper from '@material-ui/core/Paper';
 
 
 //Components
-import Input from './Components/Input'
 import AnswerButtonA from './Components/AnswerBtn/AnswerBtnA'
 import AnswerButtonB from './Components/AnswerBtn/AnswerBtnB'
 import AnswerButtonC from './Components/AnswerBtn/AnswerBtnC'
 import AnswerButtonD from './Components/AnswerBtn/AnswerBtnD'
 
 
+const axios = require('axios');
 
 const palette = {
     types: {
@@ -48,25 +48,46 @@ const Styles = {
         ...theme.mixins.gutters(),
         paddingTop: theme.spacing.unit * 2,
         paddingBottom: theme.spacing.unit * 2,
-      },
-    root:{
-        textAlign:'center;'
+    },
+    root: {
+        textAlign: 'center;'
     }
 }
+
 
 
 class Questions extends Component {
 
     constructor(props) {
-        super()
+        super(props)
         this.state = {
             UserName: '',
             Error: '',
+            question: '',
+            answerA: '',
+            answerB: '',
+            answerC: '',
+            answerD: '',
         }
     }
 
+    getQuestions() {
+        axios.get('http://localhost:8080/questions/questions').then((data) => {
+            this.setState({
+                question: data.data[0].question,
+                answerA: data.data[0].answers[0].A,
+                answerB: data.data[0].answers[1].B,
+                answerC: data.data[0].answers[2].C,
+                answerD: data.data[0].answers[3].D,
+            })
+          //  console.log(data.data[0].answers[3].D)
+        })
+    }
+
+
     render() {
         const { classes } = this.props;
+  //     {this.getQuestions()}
         return (
             <Grid container className={classes.root} spacing={16}>
                 <Grid item xs={3}></Grid>
@@ -78,33 +99,30 @@ class Questions extends Component {
                            </Typography>
                         </Grid>
                         <Grid container className={classes.root} spacing={16}>
-                        <Grid item></Grid>
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper} elevation={10}>
-                                <Typography variant="h5" component="h3">
-                                    This is a sheet of paper.
-                                </Typography>
-                                <Typography component="p">
-                                    Paper can be used to build surface or other elements for your application.
-                                </Typography>
-                            </Paper>
-                        </Grid>
-                        <Grid item></Grid>
+                            <Grid item></Grid>
+                            <Grid item xs={12}>
+                                <Paper className={classes.paper} elevation={10}>
+                                    <Typography variant="h5" component="h3">
+                                        {this.state.question}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid item></Grid>
                         </Grid>
                         <Grid item xs={12} >
-                            <AnswerButtonA></AnswerButtonA>
-                            <AnswerButtonC></AnswerButtonC>
+                            <AnswerButtonA>
+                                {this.state.answerA}
+                            </AnswerButtonA>
+                            <AnswerButtonC>
+                                {this.state.answerC}
+                            </AnswerButtonC>
                         </Grid>
                         <Grid item xs={12} >
                             <AnswerButtonB>
-                            <Typography component="p">
-                                    Paper can be used to build surface or other elements for your application.
-                                </Typography>
+                                {this.state.answerB}
                             </AnswerButtonB>
                             <AnswerButtonD>
-                            <Typography component="p">
-                                    Paper can be used to build surface or other elements for your application.
-                                </Typography>
+                                {this.state.answerD}
                             </AnswerButtonD>
                         </Grid>
                     </Grid>
