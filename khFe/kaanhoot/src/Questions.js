@@ -54,6 +54,7 @@ const Styles = {
     }
 }
 
+let i = 0;
 
 
 class Questions extends Component {
@@ -68,26 +69,48 @@ class Questions extends Component {
             answerB: '',
             answerC: '',
             answerD: '',
+            correctAnswer: ''
         }
+        this.checkAnswer = this.checkAnswer.bind(this);
     }
+
 
     getQuestions() {
         axios.get('http://localhost:8080/questions/questions').then((data) => {
             this.setState({
-                question: data.data[0].question,
-                answerA: data.data[0].answers[0].A,
-                answerB: data.data[0].answers[1].B,
-                answerC: data.data[0].answers[2].C,
-                answerD: data.data[0].answers[3].D,
+                question: data.data[i].question,
+                answerA: data.data[i].answers[0].A,
+                answerB: data.data[i].answers[1].B,
+                answerC: data.data[i].answers[2].C,
+                answerD: data.data[i].answers[3].D,
+                correctAnswer: data.data[i].correctAnswer,
             })
-          //  console.log(data.data[0].answers[3].D)
+            // console.log(this.state.correctAnswer)
         })
     }
 
+    checkAnswer(e) {
+
+        axios.get('http://localhost:8080/questions/questions').then((data) => {
+            i++
+                this.setState({
+                    question: data.data[i].question,
+                    answerA: data.data[i].answers[0].A,
+                    answerB: data.data[i].answers[1].B,
+                    answerC: data.data[i].answers[2].C,
+                    answerD: data.data[i].answers[3].D,
+                    correctAnswer: data.data[i].correctAnswer,
+                })
+            console.log(this.state.correctAnswer)
+        })
+    }
+
+    componentDidMount() {
+        this.getQuestions();
+    }
 
     render() {
         const { classes } = this.props;
-  //     {this.getQuestions()}
         return (
             <Grid container className={classes.root} spacing={16}>
                 <Grid item xs={3}></Grid>
@@ -110,18 +133,22 @@ class Questions extends Component {
                             <Grid item></Grid>
                         </Grid>
                         <Grid item xs={12} >
-                            <AnswerButtonA>
+                            <AnswerButtonA id="A"
+                                onClick={this.checkAnswer}>
                                 {this.state.answerA}
                             </AnswerButtonA>
-                            <AnswerButtonC>
+                            <AnswerButtonC id="C"
+                                onClick={this.checkAnswer}>
                                 {this.state.answerC}
                             </AnswerButtonC>
                         </Grid>
                         <Grid item xs={12} >
-                            <AnswerButtonB>
+                            <AnswerButtonB id="B"
+                                onClick={this.checkAnswer}>
                                 {this.state.answerB}
                             </AnswerButtonB>
-                            <AnswerButtonD>
+                            <AnswerButtonD id="D"
+                                onClick={this.checkAnswer}>
                                 {this.state.answerD}
                             </AnswerButtonD>
                         </Grid>

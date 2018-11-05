@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import Cookies from 'universal-cookie';
 
