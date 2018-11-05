@@ -9,7 +9,7 @@ router.use(express.json())
 const User = require('../models/users')
 
 router.post('/newUser', (req, res) => {
-    const username = req.body.username
+    const username = req.body.UserName
     const NewUser = new User({
         username: username
     })
@@ -31,9 +31,10 @@ router.post('/newUser', (req, res) => {
     })
 })
 
+
+
 router.get('/user', (req, res) => {
     const promise = User.find()
-
     promise.then((response) => {
         res.send(response)
     }).catch((err) => {

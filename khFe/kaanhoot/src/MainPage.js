@@ -5,10 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+import Cookies from 'universal-cookie';
+
 //Components
 import Btn from './Components/Btn/Btn'
 import Input from './Components/Input'
 
+const axios = require('axios');
 
 const palette = {
     types: {
@@ -43,14 +46,14 @@ const Styles = {
 
 
 class MainPage extends Component {
-
     constructor(props) {
-        super()
+        super(props)
         this.state = {
             UserName: '',
-            Error: '',
+            Error: "",
         }
     }
+
 
 
     handleChangeUserName = (e) => {
@@ -60,16 +63,32 @@ class MainPage extends Component {
     }
 
     getUserName = () => {
-        const UserName = this.state.UserName
-        if (!UserName) {
-            console.log('yok')
-            this.setState({
-                Error: 'NO Username NO Game'
-            })
+        const { UserName } = this.state;
+        if (!UserName || UserName === '' || UserName === null) {
+            this.setState({ Error: 'NO name NO game' })
         } else {
-            console.log(UserName)
-            this.setState({
-                Error: ''
+
+            axios.post('http://localhost:8080/users/newUser', {
+                UserName: this.state.UserName
+            }).then((response) => {
+                console.log(response.data)
+                if (!response.data.status) {
+                    this.setState({
+                        Error: 'This username is taken .'
+                    })
+                } else {
+                    this.setState({
+                        Error: '',
+                    }, () => {
+                        this.props.history.push('/questions');
+                    })
+                    const cookies = new Cookies();
+                    cookies.remove('auth')
+                    cookies.set('auth', 'true', { path: '/' });
+                    console.log(cookies.get('auth'));
+                }
+            }).catch((err) => {
+                console.log(err)
             })
         }
     }
@@ -94,11 +113,9 @@ class MainPage extends Component {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Link to="/questions" >
-                                <Btn onClick={this.getUserName}>
-                                    Join The Game
-                                </Btn>
-                            </Link>
+                            <Btn onClick={this.getUserName}>
+                                Join The Game
+                            </Btn>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h6" className={classes.Error} gutterBottom>
