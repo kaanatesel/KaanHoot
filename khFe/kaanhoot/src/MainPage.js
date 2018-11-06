@@ -79,7 +79,7 @@ class MainPage extends Component {
                     this.setState({
                         Error: '',
                     }, () => {
-                        this.props.history.push('/questions');
+                        this.props.history.push('/waitingRoom');
                     })
                     const cookies = new Cookies();
                     cookies.remove('auth')
@@ -113,7 +113,7 @@ class MainPage extends Component {
                         </Grid>
                         <Grid item xs={12}>
                             <Btn onClick={this.getUserName}>
-                                Join The Game
+                                Join The Room
                             </Btn>
                         </Grid>
                         <Grid item xs={12}>
