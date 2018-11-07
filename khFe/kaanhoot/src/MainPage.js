@@ -84,6 +84,7 @@ class MainPage extends Component {
                     const cookies = new Cookies();
                     cookies.remove('auth')
                     cookies.set('auth', 'true', { path: '/' });
+                    cookies.set('username', this.state.UserName, { path: '/' });
                     console.log(cookies.get('auth'));
                 }
             }).catch((err) => {

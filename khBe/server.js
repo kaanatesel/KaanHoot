@@ -3,6 +3,11 @@ const app = express()
 const router = express.Router();
 const mongoose = require('mongoose');
 
+const cookie = require('cookie');
+
+
+const io = require('socket.io')(5000);
+
 mongoose.connect('mongodb://192.168.99.100:32768/kahoot', { useNewUrlParser: true });
 
 mongoose.connection.on('open', () => {
@@ -51,9 +56,27 @@ app.use('/results', Results)
 app.use(express.json())
 
 app.post('/check', (req, res) => {
-    res.send(200,'adefads')
+    res.send(200, 'adefads')
 })
 
-app.listen(8080, ()=>{
+
+
+//SOKET IO
+io.set('origins', '*:*');
+io.on('connection', (socket) => {
+	console.log("Client Successfully Connected");
+
+	io.emit('chat', "hello world");
+})
+io.on('connection', (socket) => {
+	console.log("Client Successfully Connected");
+
+    const cookies = cookie.parse(socket.handshake.headers.cookie)
+
+    io.emit('chat',cookies  );
+})
+
+
+app.listen(8080, () => {
     console.log("This app listen port 8080");
 })

@@ -3,12 +3,12 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
-//const axios = require('axios');
-
+import { connect } from './api';
 
 //components
 import GetReadBtn from './Components/GetReadyBtn/GetReadyBtn'
+
+//const axios = require('axios');
 
 const palette = {
     types: {
@@ -68,6 +68,9 @@ class Questions extends Component {
 
     constructor(props) {
         super(props)
+            connect(message => {
+                console.log(message)
+            })
         this.state = {
             ready: 'Are you ready ??',
             readystatus:0,
