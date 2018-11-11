@@ -62,18 +62,25 @@ app.post('/check', (req, res) => {
 
 
 //SOKET IO
-io.set('origins', '*:*');
+//const nsp = io.of('/kaanhoot')
+
 io.on('connection', (socket) => {
-	console.log("Client Successfully Connected");
+    console.log('new user get in ')
+    socket.join('newuser')
 
-	io.emit('chat', "hello world");
-})
-io.on('connection', (socket) => {
-	console.log("Client Successfully Connected");
+    //socket.to('newuser').broadcast.emit('hi', 'everyone')
 
-    const cookies = cookie.parse(socket.handshake.headers.cookie)
+    socket.on('dd',(msg)=>{
+        io.emit('dd', msg);
+        console.log(msg)
+    })
 
-    io.emit('chat',cookies  );
+    io.in('newuser').emit('Waring', 'I am in fuckers')
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+   
 })
 
 

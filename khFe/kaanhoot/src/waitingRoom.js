@@ -3,12 +3,17 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { connect } from './api';
+//import { connect } from './api';
+//import openSocket from 'socket-io';
+import io from 'socket.io-client'
 
 //components
 import GetReadBtn from './Components/GetReadyBtn/GetReadyBtn'
 
 //const axios = require('axios');
+
+//const socket = openSocket('http://localhost:5000/');
+
 
 const palette = {
     types: {
@@ -45,11 +50,11 @@ const Styles = {
         float: 'left',
         letterSpacing: '2px',
     },
-    Activeusers:{
+    Activeusers: {
         color: '#fff',
         letterSpacing: '2px',
-        textAlign:'left',
-        margin:'5px',
+        textAlign: 'left',
+        margin: '5px',
     },
     KaanHoot: {
         textAlgin: 'center',
@@ -68,31 +73,55 @@ class Questions extends Component {
 
     constructor(props) {
         super(props)
-            connect(message => {
-                console.log(message)
-            })
         this.state = {
             ready: 'Are you ready ??',
-            readystatus:0,
+            readystatus: 0,
         }
+        // socket.on('chat', (message) => {
+        //     console.log(message)
+        // })
     }
 
     readyBtn = (event) => {
-       if(this.state.readystatus === 0){
-           this.setState({
-               ready:'READY !!',
-               readystatus:1
-           })
-           event.target.style.backgroundColor= '#0066ff';
-           console.log(event.target.style.backgroundColor)
-       }else{
-        this.setState({
-            ready: 'Are you ready ??',
-            readystatus:0,
-        })
-        event.target.style.backgroundColor= '#33cc33';
-       }
+        if (this.state.readystatus === 0) {
+            this.setState({
+                ready: 'READY !!',
+                readystatus: 1
+            })
+            event.target.style.backgroundColor = '#33cc33';
+            // if(this.state.readystatus=== 0){
+            console.log('redirect')
+            // }else{
+            //     console.log('aaaa')
+            // }
+        } else {
+            this.setState({
+                ready: 'Are you ready ??',
+                readystatus: 0,
+            })
+            event.target.style.backgroundColor = '#0066ff';
+        }
     }
+
+
+    getActive = () => {
+        const socket = io("http://localhost:5000/");
+
+        let data = ' kaan'
+
+        socket.emit('dd', data);
+        
+        socket.on('dd', (msg) => {
+            console.log('bağlanı')
+            console.log(msg)
+        })
+
+    }
+
+    componentDidMount() {
+        this.getActive();
+    }
+
 
     render() {
         const { classes } = this.props;
