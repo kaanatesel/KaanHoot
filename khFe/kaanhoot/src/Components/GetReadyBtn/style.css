@@ -1,0 +1,21 @@
+.GetReadBtn{
+    transition:  background-color .7s ease,box-shadow .5s ease ;
+    padding: 20px;
+    width: 94%;
+    background-color: #0066ff;
+    border:none;
+    color: #fff;
+    font-size: 120%;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.75);
+}
+.GetReadBtn:hover{
+    transition:  background-color .7s ease-in-out,box-shadow .5s ease  ;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
+}

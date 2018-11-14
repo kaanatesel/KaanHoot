@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 //Components
 import MainPage from './MainPage'
 import Questions from './Questions.js'
+import WaitingRoom from './waitingRoom'
 
 class App extends Component {
   render() {
@@ -13,6 +14,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={MainPage} />
+            <PrivateRouteQuestionPage path="/waitingRoom" component={WaitingRoom} />
             <PrivateRouteQuestionPage path="/questions" component={Questions} />
           </Switch>
         </Router>
