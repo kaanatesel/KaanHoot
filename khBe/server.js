@@ -62,26 +62,38 @@ app.post('/check', (req, res) => {
 
 
 //SOKET IO
-//const nsp = io.of('/kaanhoot')
+// io.on('connection', function(socket){
+//     socket.on('chat message', function(msg){
+//       io.emit('chat message', msg);
+//     });
+//   });
+let activeUsers = []
 
 io.on('connection', (socket) => {
     console.log('new user get in ')
     socket.join('newuser')
 
-    //socket.to('newuser').broadcast.emit('hi', 'everyone')
-
-    socket.on('dd',(msg)=>{
-        io.emit('dd', msg);
-        console.log(msg)
+    socket.on('username',(data)=>{
+        activeUsers.push(data)
+        const activeUserJSON = {activeUsers}
+        io.emit('username',activeUserJSON)
     })
-
-    io.in('newuser').emit('Waring', 'I am in fuckers')
+    
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+       for(let i = 0 ; i < activeUsers.length ; i++){
+           console.log('This is left ' + socket.id)
+       if(socket.id === activeUsers[i].id){
+           activeUsers.splice(i, 1)
+           console.log(activeUsers)
+           let remainingUsers = {activeUsers}
+           io.emit('username',remainingUsers)
+       }
+
+       }
     });
-   
-})
+
+})  
 
 
 app.listen(8080, () => {

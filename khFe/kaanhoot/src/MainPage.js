@@ -5,12 +5,15 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import Cookies from 'universal-cookie';
+import io from 'socket.io-client'
 
 //Components
 import Btn from './Components/Btn/Btn'
 import Input from './Components/Input'
 
 const axios = require('axios');
+
+const socket = io("http://localhost:5000/");
 
 const palette = {
     types: {
@@ -61,6 +64,24 @@ class MainPage extends Component {
         })
     }
 
+
+
+    // chat = () => {
+
+
+    //     let data = {
+    //         username: this.state.UserName
+    //     }
+
+    //     socket.emit('username', data)
+    // }
+
+    // msg=()=>{
+    //     socket.on('username',(data)=>{
+    //         console.log(data)
+    //     })
+    // }
+
     getUserName = () => {
         const { UserName } = this.state;
         if (!UserName || UserName === '' || UserName === null) {
@@ -70,7 +91,6 @@ class MainPage extends Component {
             axios.post('http://localhost:8080/users/newUser', {
                 UserName: this.state.UserName
             }).then((response) => {
-                console.log(response.data)
                 if (!response.data.status) {
                     this.setState({
                         Error: 'This username is taken .'
@@ -84,8 +104,14 @@ class MainPage extends Component {
                     const cookies = new Cookies();
                     cookies.remove('auth')
                     cookies.set('auth', 'true', { path: '/' });
-                    cookies.set('username', this.state.UserName, { path: '/' });
                     console.log(cookies.get('auth'));
+
+
+                    let data =  {
+                        username:this.state.UserName,
+                        id:socket.id
+                    }
+                    socket.emit('username', data)
                 }
             }).catch((err) => {
                 console.log(err)
