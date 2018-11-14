@@ -62,13 +62,8 @@ app.post('/check', (req, res) => {
 
 
 //SOKET IO
-// io.on('connection', function(socket){
-//     socket.on('chat message', function(msg){
-//       io.emit('chat message', msg);
-//     });
-//   });
 let activeUsers = []
-
+let chatMessages = []
 io.on('connection', (socket) => {
     console.log('new user get in ')
     socket.join('newuser')
@@ -77,6 +72,11 @@ io.on('connection', (socket) => {
         activeUsers.push(data)
         const activeUserJSON = {activeUsers}
         io.emit('username',activeUserJSON)
+    })
+
+    socket.on('chat',(msg)=>{
+        chatMessages.push(msg)
+        io.emit('chat',chatMessages)
     })
     
 
