@@ -8,6 +8,7 @@ const cookie = require('cookie');
 
 const io = require('socket.io')(5000);
 
+
 mongoose.connect('mongodb://192.168.99.100:32768/kahoot', { useNewUrlParser: true });
 
 mongoose.connection.on('open', () => {
@@ -63,37 +64,74 @@ app.post('/check', (req, res) => {
 
 //SOKET IO
 let activeUsers = []
+let remainingUser = []
 let chatMessages = []
+let readyUsersNumber = 0
 io.on('connection', (socket) => {
-    console.log('new user get in ')
-    socket.join('newuser')
+    console.log('new user get in ' + socket.id)
 
-    socket.on('username',(data)=>{
+    socket.on('username', (data) => {
         activeUsers.push(data)
-        const activeUserJSON = {activeUsers}
-        io.emit('username',activeUserJSON)
+        const activeUserJSON = { activeUsers }
+        io.emit('username', activeUserJSON)
     })
 
-    socket.on('chat',(msg)=>{
+    socket.on('chat', (msg) => {
         chatMessages.push(msg)
-        io.emit('chat',chatMessages)
+        io.emit('chat', chatMessages)
     })
-    
+
+    // socket.on('ready', (status) => {
+    //     if (status) {
+    //         readyUsersNumber = readyUsersNumber + 1
+    //         io.emit('ready', readyUsersNumber)
+    //         console.log(readyUsersNumber)
+    //     } else {
+    //         readyUsersNumber = readyUsersNumber - 1
+    //         if (readyUsersNumber < 0) {
+    //             readyUsersNumber = 0
+    //         }
+    //         io.emit('ready', readyUsersNumber)
+    //     }
+    // })
+    socket.on('ready', (readyStatus) => {
+        if (readyUsersNumber <= 0) {
+            readyUsersNumber = 0;
+        }
+        if (readyStatus) {
+            readyUsersNumber = readyUsersNumber + 1
+        } else {
+            readyUsersNumber = readyUsersNumber - 1
+        }
+
+        if(readyUsersNumber === activeUsers.length && readyUsersNumber >= 2){
+            io.emit('ready',true)
+            console.log('go')
+        }else{
+            io.emit('ready',false)
+            console.log('wiat')
+        }
+    })
+
+
 
     socket.on('disconnect', () => {
-       for(let i = 0 ; i < activeUsers.length ; i++){
-           console.log('This is left ' + socket.id)
-       if(socket.id === activeUsers[i].id){
-           activeUsers.splice(i, 1)
-           console.log(activeUsers)
-           let remainingUsers = {activeUsers}
-           io.emit('username',remainingUsers)
-       }
-
-       }
+        for (let i = 0; i < activeUsers.length; i++) {
+            if (socket.id === activeUsers[i].id) {
+                activeUsers.splice(i, 1)
+                remainingUser = { activeUsers }
+                if (readyUsersNumber < 0) {
+                    readyUsersNumber = 0
+                } else {
+                    readyUsersNumber = readyUsersNumber - 1
+                }
+                io.emit('ready', readyUsersNumber)
+            }
+            console.log(remainingUser)
+            io.emit('username', remainingUser)
+        }
     });
-
-})  
+})
 
 
 app.listen(8080, () => {

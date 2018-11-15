@@ -14,6 +14,8 @@ import Input from './Components/Input/index'
 //const axios = require('axios');
 const socket = io("http://localhost:5000/");
 
+//VALIABLES
+
 const palette = {
     types: {
         backgroundCOLOR: {
@@ -76,14 +78,25 @@ class Questions extends Component {
             players: {},
             sendedChatMessage: '',
             recivedChatMessage: [],
+            redirect: false,
         }
     }
 
+
+
     readyBtn = (event) => {
+        console.log(this.state.players)
+
         if (this.state.readystatus === 0) {
             this.setState({
                 ready: 'READY !!',
-                readystatus: 1
+                readystatus: 1,
+            })
+
+            const status = true
+            socket.emit('ready', status)
+            socket.on('ready',(data)=>{
+                console.log(data)
             })
             event.target.style.backgroundColor = '#33cc33';
         } else {
@@ -91,11 +104,23 @@ class Questions extends Component {
                 ready: 'Are you ready ??',
                 readystatus: 0,
             })
+
+            const status = false
+            socket.emit('ready', status)
+
             event.target.style.backgroundColor = '#0066ff';
         }
-        console.log(this.state.players.activeUsers.length)
     }
 
+    redirect = () => {
+     socket.on('ready',(data)=>{
+         if(data){
+            this.props.history.push('/questions')
+         }else{
+             console.log('kan')
+         }
+    })
+    }
 
     getActive = () => {
         socket.on('username', (data) => {
@@ -103,9 +128,6 @@ class Questions extends Component {
                 players: data,
             })
         })
-        // setTimeout(function () {
-        //     console.log(this.state.players.activeUsers)
-        // }.bind(this), 500)
     }
 
     listActiveUser = () => {
@@ -145,10 +167,8 @@ class Questions extends Component {
     }
 
     displayChatMessage = () => {
-        
         if (this.state.recivedChatMessage.length > 0) {
-            debugger;
-            return this.state.recivedChatMessage.map((chat,index) =>
+            return this.state.recivedChatMessage.map((chat, index) =>
                 <li key={index}>
                     {chat.message}
                 </li>
@@ -158,9 +178,12 @@ class Questions extends Component {
         }
     }
 
+
+
     componentDidMount() {
         this.getActive();
         this.getChatMessage();
+        this.redirect()
     }
 
 
@@ -175,13 +198,12 @@ class Questions extends Component {
                                 KaaNHooT
                             </Typography>
                         </Grid>
+                        {/* <Grid item className={classes.activeUsers} xs={12}>
+                          
+                        </Grid> */}
                         <Grid item className={classes.activeUsers} xs={12}>
                             <Typography variant="h6" className={classes.headerActive}>
                                 Active Users :
-                            </Typography>
-                        </Grid>
-                        <Grid item className={classes.activeUsers} xs={12}>
-                            <Typography variant="h6" className={classes.headerActive}>
                                 {this.listActiveUser()}
                             </Typography>
                         </Grid>
@@ -200,7 +222,7 @@ class Questions extends Component {
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                        <Typography variant="h6" className={classes.headerActive}>
+                            <Typography variant="h6" className={classes.headerActive}>
                                 {this.displayChatMessage()}
                             </Typography>
                         </Grid>
