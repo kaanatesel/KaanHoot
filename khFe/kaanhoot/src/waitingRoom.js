@@ -82,6 +82,11 @@ class Questions extends Component {
         }
     }
 
+    componentDidMount() {
+        this.getActive();
+        this.getChatMessage();
+        this.redirect()
+    }
 
 
     readyBtn = (event) => {
@@ -174,17 +179,13 @@ class Questions extends Component {
                 </li>
             );
         } else {
-            return <div>Nobody types...</div>
+            return <div>Enter Chat</div>
         }
     }
 
 
 
-    componentDidMount() {
-        this.getActive();
-        this.getChatMessage();
-        this.redirect()
-    }
+   
 
 
     render() {

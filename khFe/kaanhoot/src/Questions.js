@@ -56,7 +56,6 @@ const Styles = {
 
 let i = 0;
 
-
 class Questions extends Component {
 
     constructor(props) {
@@ -69,7 +68,8 @@ class Questions extends Component {
             answerB: '',
             answerC: '',
             answerD: '',
-            correctAnswer: ''
+            correctAnswer: '',
+            currentCount: 5,
         }
         this.checkAnswer = this.checkAnswer.bind(this);
     }
@@ -89,24 +89,39 @@ class Questions extends Component {
         })
     }
 
-    checkAnswer(e) {
+    checkAnswer() {
 
         axios.get('http://localhost:8080/questions/questions').then((data) => {
             i++
-                this.setState({
-                    question: data.data[i].question,
-                    answerA: data.data[i].answers[0].A,
-                    answerB: data.data[i].answers[1].B,
-                    answerC: data.data[i].answers[2].C,
-                    answerD: data.data[i].answers[3].D,
-                    correctAnswer: data.data[i].correctAnswer,
-                })
+            this.setState({
+                question: data.data[i].question,
+                answerA: data.data[i].answers[0].A,
+                answerB: data.data[i].answers[1].B,
+                answerC: data.data[i].answers[2].C,
+                answerD: data.data[i].answers[3].D,
+                correctAnswer: data.data[i].correctAnswer,
+            })
             console.log(this.state.correctAnswer)
         })
+    }
+    timer() {
+        if (this.state.currentCount === 0) {
+            this.props.history.push('/waitingRoom')
+        } else {
+            const newCount = this.state.currentCount - 1
+            this.setState({
+                currentCount: newCount
+            })
+        }
     }
 
     componentDidMount() {
         this.getQuestions();
+        this.timerID = setInterval(() => this.timer(), 1000)
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID)
     }
 
     render() {
@@ -131,6 +146,13 @@ class Questions extends Component {
                                 </Paper>
                             </Grid>
                             <Grid item></Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Paper className={classes.paper} elevation={10}>
+                                <Typography variant="h5" component="h3">
+                                    {this.state.currentCount}
+                                </Typography>
+                            </Paper>
                         </Grid>
                         <Grid item xs={12} >
                             <AnswerButtonA id="A"
