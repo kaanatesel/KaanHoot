@@ -116,6 +116,7 @@ io.on('connection', (socket) => {
 
 
     socket.on('disconnect', () => {
+        console.log('this user is disconnected ' + socket.id)
         for (let i = 0; i < activeUsers.length; i++) {
             if (socket.id === activeUsers[i].id) {
                 activeUsers.splice(i, 1)
