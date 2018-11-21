@@ -64,24 +64,6 @@ class MainPage extends Component {
         })
     }
 
-
-
-    // chat = () => {
-
-
-    //     let data = {
-    //         username: this.state.UserName
-    //     }
-
-    //     socket.emit('username', data)
-    // }
-
-    // msg=()=>{
-    //     socket.on('username',(data)=>{
-    //         console.log(data)
-    //     })
-    // }
-
     getUserName = () => {
         const { UserName } = this.state;
         if (!UserName || UserName === '' || UserName === null) {
