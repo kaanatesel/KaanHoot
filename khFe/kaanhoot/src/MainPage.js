@@ -14,6 +14,10 @@ import Input from './Components/Input'
 const axios = require('axios');
 
 const socket = io("http://localhost:5000/");
+const cookies = new Cookies();
+
+cookies.set('auth', false, { path: '/' });
+cookies.set('username', '', { path: '/' });
 
 const palette = {
     types: {
@@ -83,16 +87,14 @@ class MainPage extends Component {
                     }, () => {
                         this.props.history.push('/waitingRoom');
                     })
-                    const cookies = new Cookies();
-                    cookies.remove('auth')
-                    cookies.set('auth', 'true', { path: '/' });
-                    console.log(cookies.get('auth'));
+                    cookies.set('auth', true, { path: '/' });
+                    cookies.set('username', this.state.UserName, { path: '/' });
 
-
-                    let data =  {
-                        username:this.state.UserName,
-                        id:socket.id
+                    let data = {
+                        username: this.state.UserName,
+                        id: socket.id
                     }
+
                     socket.emit('username', data)
                 }
             }).catch((err) => {
