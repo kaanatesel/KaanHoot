@@ -82,20 +82,26 @@ class MainPage extends Component {
                         Error: 'This username is taken .'
                     })
                 } else {
+                    cookies.set('auth', true, { path: '/' });
+                    cookies.set('username', this.state.UserName, { path: '/' });
+                    let data = {
+                        username: this.state.UserName,
+                        id: socket.id
+                    }
+                    let data2 = {
+                        username: this.state.UserName,
+                    }
+                    socket.emit('newEntry', data2)
+                    socket.emit('username', data)
+
                     this.setState({
                         Error: '',
                     }, () => {
                         this.props.history.push('/waitingRoom');
                     })
-                    cookies.set('auth', true, { path: '/' });
-                    cookies.set('username', this.state.UserName, { path: '/' });
 
-                    let data = {
-                        username: this.state.UserName,
-                        id: socket.id
-                    }
 
-                    socket.emit('username', data)
+
                 }
             }).catch((err) => {
                 console.log(err)

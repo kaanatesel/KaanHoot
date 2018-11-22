@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import io from 'socket.io-client'
+import Cookies from 'universal-cookie';
 
 //components
 import GetReadBtn from './Components/GetReadyBtn/GetReadyBtn'
@@ -13,6 +14,8 @@ import Input from './Components/Input/index'
 
 //const axios = require('axios');
 const socket = io("http://localhost:5000/");
+const cookies = new Cookies();
+
 
 //VALIABLES
 
@@ -67,7 +70,7 @@ const Styles = {
         textAlign: 'center',
     },
 }
-
+let thisUser = ''
 class Questions extends Component {
 
     constructor(props) {
@@ -75,19 +78,33 @@ class Questions extends Component {
         this.state = {
             ready: 'Are you ready ??',
             readystatus: 0,
-            players: {},
+            players: '',
             sendedChatMessage: '',
             recivedChatMessage: [],
             redirect: false,
+            users: {}
         }
     }
 
     componentDidMount() {
+        this.socketIdSet()
         this.getActive();
         this.getChatMessage();
         this.redirect()
     }
 
+
+    socketIdSet() {
+        thisUser = cookies.get('username')
+        socket.on('users', (data) => {
+            this.setState({
+                users: data
+            })
+        })
+
+
+
+    }
 
     readyBtn = (event) => {
         console.log(this.state.players)
@@ -100,7 +117,7 @@ class Questions extends Component {
 
             const status = true
             socket.emit('ready', status)
-            socket.on('ready',(data)=>{
+            socket.on('ready', (data) => {
                 console.log(data)
             })
             event.target.style.backgroundColor = '#33cc33';
@@ -118,13 +135,13 @@ class Questions extends Component {
     }
 
     redirect = () => {
-     socket.on('ready',(data)=>{
-         if(data){
-            this.props.history.push('/questions')
-         }else{
-             console.log('kan')
-         }
-    })
+        socket.on('ready', (data) => {
+            if (data) {
+                this.props.history.push('/questions')
+            } else {
+                console.log('kan')
+            }
+        })
     }
 
     getActive = () => {
@@ -133,18 +150,33 @@ class Questions extends Component {
                 players: data,
             })
         })
+
     }
 
     listActiveUser = () => {
-        if (this.state.players.activeUsers) {
-            return this.state.players.activeUsers.map((player) =>
-                <li key={player.id}>
-                    {player.username}
-                </li>
-            );
+        if (this.state.players) {
+            console.log('var')
+            console.log(this.state.players[0].username)
+            return this.state.players.map((player)=>
+            <p>{player.username}</p>
+            )
+
         } else {
-            return <div>Yükleniyor...</div>
+            console.log('yok')
+            console.log(this.state.players)
+            return <p>No users</p>
+            
         }
+        // if (this.state.players) {
+        //     debugger;
+        //     return this.state.players.map((player) =>
+        //         <li key={player.id}>
+        //             {player.username}
+        //         </li>
+        //     );
+        // } else {
+        //     return <div>Yükleniyor...</div>
+        // }
     }
 
     handleChatMessage = (e) => {
@@ -158,13 +190,15 @@ class Questions extends Component {
             sendedChatMessage: '',
         })
         const msg = {
-            message: this.state.sendedChatMessage
+            message: this.state.sendedChatMessage,
+            thisuserinfo: this.state.users[thisUser]
         }
         socket.emit('chat', msg)
     }
 
     getChatMessage = () => {
         socket.on('chat', (messages) => {
+            console.log(messages)
             this.setState({
                 recivedChatMessage: messages,
             })
@@ -174,19 +208,19 @@ class Questions extends Component {
     displayChatMessage = () => {
         if (this.state.recivedChatMessage.length > 0) {
             return this.state.recivedChatMessage.map((chat, index) =>
-                <li key={index}>
-                    {chat.message}
-                </li>
+                <div key={index}>
+                    <h2 >
+                        {chat.thisuserinfo.username}
+                    </h2>
+                    <p>
+                        {chat.message}
+                    </p>
+                </div>
             );
         } else {
             return <div>Enter Chat</div>
         }
     }
-
-
-
-   
-
 
     render() {
         const { classes } = this.props;
@@ -199,9 +233,6 @@ class Questions extends Component {
                                 KaaNHooT
                             </Typography>
                         </Grid>
-                        {/* <Grid item className={classes.activeUsers} xs={12}>
-                          
-                        </Grid> */}
                         <Grid item className={classes.activeUsers} xs={12}>
                             <Typography variant="h6" className={classes.headerActive}>
                                 Active Users :
