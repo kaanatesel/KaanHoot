@@ -69,7 +69,7 @@ class Questions extends Component {
             answerC: '',
             answerD: '',
             correctAnswer: '',
-            currentCount: 5,
+            //currentCount: 5,
         }
         this.checkAnswer = this.checkAnswer.bind(this);
     }
@@ -90,7 +90,6 @@ class Questions extends Component {
     }
 
     checkAnswer() {
-
         axios.get('http://localhost:8080/questions/questions').then((data) => {
             i++
             this.setState({
@@ -104,24 +103,24 @@ class Questions extends Component {
             console.log(this.state.correctAnswer)
         })
     }
-    timer() {
-        if (this.state.currentCount === 0) {
-            this.props.history.push('/waitingRoom')
-        } else {
-            const newCount = this.state.currentCount - 1
-            this.setState({
-                currentCount: newCount
-            })
-        }
-    }
+    // timer() {
+    //     if (this.state.currentCount === 0) {
+    //         this.props.history.push('/waitingRoom')
+    //     } else {
+    //         const newCount = this.state.currentCount - 1
+    //         this.setState({
+    //             currentCount: newCount
+    //         })
+    //     }
+    // }
 
     componentDidMount() {
         this.getQuestions();
-        this.timerID = setInterval(() => this.timer(), 1000)
+       // this.timerID = setInterval(() => this.timer(), 1000)
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID)
+      //  clearInterval(this.timerID)
     }
 
     render() {
