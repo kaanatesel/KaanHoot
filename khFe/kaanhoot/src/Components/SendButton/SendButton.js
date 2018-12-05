@@ -11,7 +11,7 @@ class SendButton extends Component {
     render() {
         return (
             <button {...this.props} className='SendButton'>
-                Send
+                
             </button>
         );
     }

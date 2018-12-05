@@ -21,3 +21,6 @@
     width: 70%;
     height: 50px;
 }
+.btn:disabled{
+    background-color: #fff;
+}

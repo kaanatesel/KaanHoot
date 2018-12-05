@@ -9,7 +9,7 @@ const cookie = require('cookie');
 const io = require('socket.io')(5000);
 
 
-mongoose.connect('mongodb://192.168.99.100:32768/kahoot', { useNewUrlParser: true });
+mongoose.connect('mongodb://ateselboy:Malmert31@ds141221.mlab.com:41221/kaanhoot', { useNewUrlParser: true });
 
 mongoose.connection.on('open', () => {
     console.log("connected to db")

@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 //components
 import Paper from './Components/Paper'
 import MainChartDiv from './Components/ColumnChart/MainChartDiv'
+import SendButton from './Components/SendButton/SendButton'
 import Chart from './Components/ColumnChart/Charts'
 import Users from './Components/ColumnChart/Users'
 
@@ -33,6 +34,15 @@ const Styles = {
     paper: {
         backgroundColor: 'red',
     },
+    root: {
+        padding: "40px",
+        maxWidth: "500px",
+        margin: "auto",
+        textAlign: "center",
+    },
+    newgameBtn:{
+        marginTop:'50px',
+    }
 }
 
 class MidResults extends Component {
@@ -42,18 +52,22 @@ class MidResults extends Component {
 
         }
     }
+    newgame = () => {
+        this.props.history.push('/');
+    }
     render() {
         const { classes } = this.props;
         return (
             <div>
-                <Grid container spacing={8}>
-                    <Grid item xs></Grid>
-                    <Grid item className={classes.mainMiddle} xs={6}>
+                <Grid container className={classes.root} spacing={8}>
+                    <Grid item className={classes.mainMiddle} xs={12}>
                         <Paper className={classes.paper}>
                             <MainChartDiv chart={<Chart />} users={<Users user="kana" />} />
+                            <div className={classes.newgameBtn}>
+                                <SendButton onClick={this.newgame}>New Game</SendButton>
+                            </div>
                         </Paper>
                     </Grid>
-                    <Grid item xs></Grid>
                 </Grid>
 
             </div>

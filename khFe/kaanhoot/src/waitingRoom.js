@@ -11,7 +11,8 @@ import Cookies from 'universal-cookie';
 import GetReadBtn from './Components/GetReadyBtn/GetReadyBtn'
 import SendButton from './Components/SendButton/SendButton'
 import Input from './Components/Input/index'
-
+import Send from '@material-ui/icons/Send';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 //const axios = require('axios');
 const socket = io("http://localhost:5000/");
 const cookies = new Cookies();
@@ -69,6 +70,12 @@ const Styles = {
         marginTop: '10%',
         textAlign: 'center',
     },
+    root: {
+        maxWidth: '500px',
+        textAlign: 'center',
+        padding: "40px",
+        margin: "auto",
+    }
 }
 let thisUser = ''
 class Questions extends Component {
@@ -107,7 +114,6 @@ class Questions extends Component {
     }
 
     readyBtn = (event) => {
-        console.log(this.state.players)
 
         if (this.state.readystatus === 0) {
             this.setState({
@@ -138,9 +144,7 @@ class Questions extends Component {
         socket.on('ready', (data) => {
             if (data) {
                 this.props.history.push('/questions')
-            } else {
-                console.log('kan')
-            }
+            } else { }
         })
     }
 
@@ -155,28 +159,13 @@ class Questions extends Component {
 
     listActiveUser = () => {
         if (this.state.players) {
-            console.log('var')
-            console.log(this.state.players[0].username)
-            return this.state.players.map((player)=>
-            <p>{player.username}</p>
+            return this.state.players.map((player) =>
+                <p>{player.username}</p>
             )
 
         } else {
-            console.log('yok')
-            console.log(this.state.players)
             return <p>No users</p>
-            
         }
-        // if (this.state.players) {
-        //     debugger;
-        //     return this.state.players.map((player) =>
-        //         <li key={player.id}>
-        //             {player.username}
-        //         </li>
-        //     );
-        // } else {
-        //     return <div>Yükleniyor...</div>
-        // }
     }
 
     handleChatMessage = (e) => {
@@ -198,7 +187,6 @@ class Questions extends Component {
 
     getChatMessage = () => {
         socket.on('chat', (messages) => {
-            console.log(messages)
             this.setState({
                 recivedChatMessage: messages,
             })
@@ -209,11 +197,8 @@ class Questions extends Component {
         if (this.state.recivedChatMessage.length > 0) {
             return this.state.recivedChatMessage.map((chat, index) =>
                 <div key={index}>
-                    <h2 >
-                        {chat.thisuserinfo.username}
-                    </h2>
                     <p>
-                        {chat.message}
+                        {chat.thisuserinfo.username}: {chat.message}
                     </p>
                 </div>
             );
@@ -221,54 +206,49 @@ class Questions extends Component {
             return <div>Enter Chat</div>
         }
     }
-
     render() {
         const { classes } = this.props;
         return (
             <Grid container className={classes.root} spacing={16}>
-                <Grid item className={classes.CenteredDiv} xs={6}>
-                    <Grid container className={classes.root} spacing={8}>
-                        <Grid item xs={12}>
-                            <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
-                                KaaNHooT
+                <Grid container className={classes.root2} spacing={8}>
+                    <Grid item xs={12}>
+                        <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
+                            KaaNHooT
                             </Typography>
-                        </Grid>
-                        <Grid item className={classes.activeUsers} xs={12}>
-                            <Typography variant="h6" className={classes.headerActive}>
-                                Active Users :
+                    </Grid>
+                    <Grid item className={classes.activeUsers} xs={12}>
+                        <Typography variant="h6" className={classes.headerActive}>
+                            Active Users :
                                 {this.listActiveUser()}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <GetReadBtn onClick={this.readyBtn}>
-                                {this.state.ready}
-                            </GetReadBtn>
-                        </Grid>
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <GetReadBtn onClick={this.readyBtn}>
+                            {this.state.ready}
+                        </GetReadBtn>
                     </Grid>
                 </Grid>
-                <Grid item className={classes.CenteredDiv} xs={6}>
-                    <Grid container className={classes.root} spacing={16}>
-                        <Grid item xs={12}>
-                            <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
-                                Chat
+                <Grid container className={classes.root} spacing={16}>
+                    <Grid item xs={12}>
+                        <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
+                            Chat
                             </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" className={classes.headerActive}>
-                                {this.displayChatMessage()}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Grid container className={classes.root} spacing={8}>
-                                <Grid item xs={10}>
-                                    <Input
-                                        onChange={this.handleChatMessage}
-                                        value={this.state.sendedChatMessage}>
-                                    </Input>
-                                </Grid>
-                                <Grid item xs={2}>
-                                    <SendButton onClick={this.chat}></SendButton>
-                                </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" className={classes.headerActive}>
+                            {this.displayChatMessage()}
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid container className={classes.root2} spacing={8}>
+                            <Grid item xs={8}>
+                                <Input
+                                    onChange={this.handleChatMessage}
+                                    value={this.state.sendedChatMessage}>
+                                </Input>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <SendButton onClick={this.chat}><Send /></SendButton>
                             </Grid>
                         </Grid>
                     </Grid>

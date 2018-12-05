@@ -8,9 +8,6 @@ class MainChartDiv extends Component {
                 <div className="charts">
                     {this.props.chart}
                 </div>
-                <div className="users">
-                    {this.props.users}
-                </div>
             </div>
         );
     }
