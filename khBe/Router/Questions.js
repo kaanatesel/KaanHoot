@@ -23,6 +23,15 @@ router.post('/newQuestion', (req, res) => {
     })
 })
 
+router.get('/getOneQuestion/:questionID', (req, res) => {
+    const promise = Questions.findOne({questionId:req.params.questionID})
+    promise.then((response) => {
+        res.send(response)
+    }).catch((err) => { 
+        res.send(err)
+    })
+})
+
 router.get('/questions', (req, res) => {
     const promise = Questions.find()
     promise.then((questions) => {

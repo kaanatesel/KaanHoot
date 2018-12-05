@@ -14,6 +14,10 @@ import Input from './Components/Input'
 const axios = require('axios');
 
 const socket = io("http://localhost:5000/");
+const cookies = new Cookies();
+
+cookies.set('auth', false, { path: '/' });
+cookies.set('username', '', { path: '/' });
 
 const palette = {
     types: {
@@ -43,6 +47,12 @@ const Styles = {
     Error: {
         color: 'red',
         fontWeight: 'bold',
+    },
+    root: {
+        textAlign: "center",
+        margin: "auto,",
+        padding:'35px',
+        paddingTop:'70px',
     }
 }
 
@@ -53,7 +63,9 @@ class MainPage extends Component {
         this.state = {
             UserName: '',
             Error: "",
+            a: '',
         }
+        //  this.disable = this.disable.bind(this);
     }
 
 
@@ -78,61 +90,66 @@ class MainPage extends Component {
                         Error: 'This username is taken .'
                     })
                 } else {
+                    cookies.set('auth', true, { path: '/' });
+                    cookies.set('username', this.state.UserName, { path: '/' });
+                    let data = {
+                        username: this.state.UserName,
+                        id: socket.id
+                    }
+                    let data2 = {
+                        username: this.state.UserName,
+                    }
+                    socket.emit('newEntry', data2)
+                    socket.emit('username', data)
+
                     this.setState({
                         Error: '',
                     }, () => {
                         this.props.history.push('/waitingRoom');
                     })
-                    const cookies = new Cookies();
-                    cookies.remove('auth')
-                    cookies.set('auth', 'true', { path: '/' });
-                    console.log(cookies.get('auth'));
 
 
-                    let data =  {
-                        username:this.state.UserName,
-                        id:socket.id
-                    }
-                    socket.emit('username', data)
+
                 }
             }).catch((err) => {
                 console.log(err)
             })
         }
     }
+    // disable(){
+    //     console.log('click!')
+    //    this.setState({
+    //        a:true
+    //    })
+
+    // }
 
     render() {
         const { classes } = this.props;
         return (
             <Grid container className={classes.root} spacing={16}>
-                <Grid item xs={3}></Grid>
-                <Grid item className={classes.CenteredDiv} xs={6}>
-                    <Grid container className={classes.root} spacing={8}>
-                        <Grid item xs={12}>
-                            <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
-                                KaaNHooT
+                <Grid item xs={12}>
+                    <Typography variant="h3" className={classes.KaanHoot} gutterBottom>
+                        KaaNHooT
                             </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Input
-                                onChange={this.handleChangeUserName}
-                                placeholder="...UserName"
-                                value={this.state.UserName}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Btn onClick={this.getUserName}>
-                                Join The Room
-                            </Btn>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="h6" className={classes.Error} gutterBottom>
-                                {this.state.Error}
-                            </Typography>
-                        </Grid>
-                    </Grid>
                 </Grid>
-                <Grid item xs={3}></Grid>
+                <Grid item xs={12}>
+                    <Input
+                        onChange={this.handleChangeUserName}
+                        placeholder="...UserName"
+                        value={this.state.UserName}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Btn onClick={this.getUserName}>
+                        Join The Room
+                            </Btn>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="h6" className={classes.Error} gutterBottom>
+                        {this.state.Error}
+                    </Typography>
+                </Grid>
             </Grid>
         );
     }
