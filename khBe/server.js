@@ -63,17 +63,35 @@ app.post('/check', (req, res) => {
 
 
 //SOKET IO
-let activeUsers = []
+let users = {}
+let activeUsers = {}
 let remainingUser = []
 let chatMessages = []
+let results = []
 let readyUsersNumber = 0
 io.on('connection', (socket) => {
     console.log('new user get in ' + socket.id)
 
     socket.on('username', (data) => {
-        activeUsers.push(data)
-        const activeUserJSON = { activeUsers }
-        io.emit('username', activeUserJSON)
+        const onlineUsers = {
+            username: data.username,
+            id: data.id,
+            point: 0,
+        }
+
+        remainingUser.push(onlineUsers)
+        io.emit('username', remainingUser)
+
+    })
+
+    socket.on('newEntry', (data) => {
+        const defoultData = {
+            id: socket.id,
+            point: 0
+        }
+        const userEntryData = Object.assign(defoultData, data)
+        users[data.username] = userEntryData
+        io.emit('users', users)
     })
 
     socket.on('chat', (msg) => {
@@ -81,19 +99,6 @@ io.on('connection', (socket) => {
         io.emit('chat', chatMessages)
     })
 
-    // socket.on('ready', (status) => {
-    //     if (status) {
-    //         readyUsersNumber = readyUsersNumber + 1
-    //         io.emit('ready', readyUsersNumber)
-    //         console.log(readyUsersNumber)
-    //     } else {
-    //         readyUsersNumber = readyUsersNumber - 1
-    //         if (readyUsersNumber < 0) {
-    //             readyUsersNumber = 0
-    //         }
-    //         io.emit('ready', readyUsersNumber)
-    //     }
-    // })
     socket.on('ready', (readyStatus) => {
         if (readyUsersNumber <= 0) {
             readyUsersNumber = 0;
@@ -103,33 +108,57 @@ io.on('connection', (socket) => {
         } else {
             readyUsersNumber = readyUsersNumber - 1
         }
+        if (readyUsersNumber === remainingUser.length && readyUsersNumber >= 2) {
 
-        if(readyUsersNumber === activeUsers.length && readyUsersNumber >= 2){
-            io.emit('ready',true)
+            io.emit('ready', true)
+            setTimeout(function () {
+                io.emit('questionPageData', remainingUser)
+                console.log(remainingUser)
+
+            }, 2000)
+            //io.emit('questionPageData', remainingUser)
             console.log('go')
-        }else{
-            io.emit('ready',false)
-            console.log('wiat')
+
+            readyUsersNumber = 0
+        } else {
+            io.emit('ready', false)
+            console.log('user ' + remainingUser.length)
+            console.log('ready user  ' + readyUsersNumber)
         }
     })
 
+    socket.on('resultsRequest', (data) => {
+        let resultsName = data
 
+        results.push(resultsName)
+        io.emit('resultsRequest2', results)
+    })
+
+    socket.on('cleanFornew', (data) => {
+        if (data === true) {
+            users = {}
+            activeUsers = {}
+            remainingUser = []
+            chatMessages = []
+            results = []
+            readyUsersNumber = 0
+        }
+
+    })
 
     socket.on('disconnect', () => {
-        console.log('this is disconneted ' + socket.id)
-        for (let i = 0; i < activeUsers.length; i++) {
-            if (socket.id === activeUsers[i].id) {
-                activeUsers.splice(i, 1)
-                remainingUser = { activeUsers }
-                if (readyUsersNumber < 0) {
-                    readyUsersNumber = 0
-                } else {
-                    readyUsersNumber = readyUsersNumber - 1
-                }
-                io.emit('ready', readyUsersNumber)
-            }
+        console.log(activeUsers)
+        for (let i = 0; i < remainingUser.length; i++) {
+            console.log('-----')
             console.log(remainingUser)
-            io.emit('username', remainingUser)
+            if (socket.id == remainingUser[i].id) {
+                remainingUser.splice(i, 1)
+                console.log('-----2')
+                console.log(remainingUser)
+                io.emit('username', remainingUser)
+            } else {
+                console.log('olmadı')
+            }
         }
     });
 })

@@ -5,6 +5,10 @@ const newUser = new Schema({
     username : {
         type: String,
         unique: true
+    },
+    point:{
+        type: Number,
+        default: 0
     }
 })
 
