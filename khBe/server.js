@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('disconnect', () => {
+     socket.on('disconnect', () => {
         console.log(activeUsers)
         for (let i = 0; i < remainingUser.length; i++) {
             console.log('-----')
@@ -160,6 +160,7 @@ io.on('connection', (socket) => {
                 console.log('olmadı')
             }
         }
+    });
     });
 })
 
